@@ -10,8 +10,7 @@ router.get("/", async (req, res) => {
 router.get('/:cid', async (req,res)=>{
   const {cid} = req.params
   try {
-    const cart = await Cart.findOne({_id: cid})
-    console.log(cart)
+    const cart = await Cart.findOne({_id: cid}).populate('products.product')
     res.json({cart})
   } catch (error) {
     console.log(error)
@@ -38,7 +37,33 @@ router.post('/', async(req,res)=>{
 router.patch('/:cartId/products/:productId', async (req, res) => {
   const { cartId, productId } = req.params;
   const { quantity } = req.body;
+  try {
+    const cart = await Cart.findOne({ _id: cartId })
+      .populate('products.product'); // agregar el método populate
+
+    // actualizar la cantidad del producto si ya está en el carrito
+    const existingProduct = cart.products.find(p => p.product._id.toString() === productId);
+    if (existingProduct) {
+      existingProduct.quantity = quantity;
+    } else {
+      // agregar el producto al carrito si no existe
+      cart.products.push({ product: productId, quantity });
+    }
+
+    await cart.save();
+
+    res.status(200).json({ message: 'Product added to cart', cart });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding product to cart', error });
+  }
+})
+
+/*   const { cartId, productId } = req.params;
+  const { quantity } = req.body;
   
+  const cart = await Cart.findOne({_id: cartId})
+  cart.product.push(productId)
+  const response = await Cart.updateOne(cartId, cart)
   try {
     const result = await Cart.updateOne(
       { _id: cartId },
@@ -48,8 +73,8 @@ router.patch('/:cartId/products/:productId', async (req, res) => {
     res.status(200).json({ message: 'Product added to cart', result });
   } catch (error) {
     res.status(500).json({ message: 'Error adding product to cart', error });
-  }
-})
+  } */
+
 
 router.delete('/:cartId/products/:productId', async (req, res) => {
   const { cartId, productId } = req.params;
