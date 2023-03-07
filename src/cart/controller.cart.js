@@ -2,6 +2,7 @@ const { Router } = require("express");
 const router = Router();
 const Cart = require("../models/cart.model");
 
+
 router.get("/", async (req, res) => {
   const carts = await Cart.find()
   res.json({ msj: carts });
@@ -11,7 +12,23 @@ router.get('/:cid', async (req,res)=>{
   const {cid} = req.params
   try {
     const cart = await Cart.findOne({_id: cid}).populate('products.product')
-    res.json({cart})
+
+
+    const products = cart.products.map(cartProduct => {
+      const product = cartProduct.product;
+      const cartItem = cart.products.find(item => item.product._id === product._id);
+
+      if (cartItem) {
+        return {
+          ...product.toObject(),
+          quantity: cartItem.quantity
+        };
+      }
+
+      return product.toObject();
+    });
+
+    res.render('cart.handlebars',{products})
   } catch (error) {
     console.log(error)
   }
@@ -36,7 +53,12 @@ router.post('/', async(req,res)=>{
 
 router.patch('/:cartId/products/:productId', async (req, res) => {
   const { cartId, productId } = req.params;
-  const { quantity } = req.body;
+  const { cantidad } = req.body;
+  let quantity = cantidad
+
+  if(!quantity){
+    quantity = 1
+  }
 
   try {
     const cart = await Cart.findOne({_id: cartId})
@@ -46,7 +68,6 @@ router.patch('/:cartId/products/:productId', async (req, res) => {
     } else {
       cart.products.push({ product: productId, quantity });//sino, le pusheo el quantity que por defoult es 1
     }
-
     await cart.save()//guardo el cart, me costó un huevo encontrar un método así porfa profe valore jejeje
     res.status(200).json({ message: 'Product added to cart', cart })
   } catch (error) {
@@ -61,7 +82,7 @@ router.delete('/:cartId/products/:productId', async (req, res) => {
   try {
     const result = await Cart.updateOne(
       { _id: cartId },
-      { $pull: { products: { productId: productId } } },
+      { $pull: { products: { product: productId } } },
       {new: true}
     );
 

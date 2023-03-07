@@ -1,9 +1,12 @@
+<h2>bienvenido {{user.firstName}}</h2>
 {{#each productsMapped}}
   <div style="border: 3px black;">
     <li><h3>{{this.name}}</h3>
     <h4>{{this.type}}</h4>
     <p>{{this.description}}</p>
     <p>{{this.unitPrice}}</p>
+    <button class="btn-add-to-cart" data-product-id="{{id}}"> Añadir al carrito</button>
   </li></div>
 
 {{/each}}
+<script src="/js/scripts.js"></script>

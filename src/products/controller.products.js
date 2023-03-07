@@ -4,7 +4,8 @@ const Product = require("../models/products.models");
 
 router.get("/", async (req, res) => {
   const { orderBy, type, brand, size, page, perPage,  } = req.query;
-
+  const {user} = req.session
+  console.log(req.session.user)
   const query={}//Solamente deseo filtrar por esos campos
   if(type) query.type = type
   if(brand) query.brand = brand
@@ -22,14 +23,15 @@ router.get("/", async (req, res) => {
 
   try {
     const products = await Product.paginate(query, options);
-    const productsMapped = products.docs.map(({name, description, unitPrice, type})=>({
+    const productsMapped = products.docs.map(({name, description, unitPrice, type, _id})=>({
+      id: _id,
       name,
       description,
       unitPrice,
       type
     }))
-    res.render('products.handlebars',{ productsMapped });
-    console.log(productsMapped)
+    res.render('products.handlebars',{ productsMapped, user });
+
   } catch (error) {
     console.log(error);
   }

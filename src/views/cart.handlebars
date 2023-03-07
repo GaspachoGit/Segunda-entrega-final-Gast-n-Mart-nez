@@ -1,0 +1,25 @@
+  <ul>
+    {{#each products}}
+      <li>
+        <h3>{{this.name}}</h3>
+        <p>{{this.description}}</p>
+        <p>Cantidad: {{this.quantity}}</p>
+        <p>Precio unitario: {{this.unitPrice}}</p>
+        <button class="btn-remove-to-cart" data-product-id="{{_id}}">eliminar del carrito</button>
+      </li>
+    {{/each}}
+  </ul>
+<script src="/js/cart.js"></script>
+
+
+{{!-- {{#each cart}}
+  <div style="border: 3px black;">
+    <li><h3>{{this.name}}</h3>
+    <h4>{{this.type}}</h4>
+    <p>{{this.description}}</p>
+    <p>{{this.unitPrice}}</p>
+    <button class="btn-add-to-cart" data-product-id="{{id}}"> eliminar del carrito</button>
+  </li></div>
+
+{{/each}}
+<script src="/js/scripts.js"></script> --}}
