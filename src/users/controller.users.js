@@ -11,9 +11,11 @@ router.post('/', async(req,res)=>{
     lastName,
     age,
     email,
-    password
+    password,
   }
-  
+  if(email === 'adminCoder@coder.com'){
+    newUserInfo.role = 'admin'
+  }
   const newUser = await User.create(newUserInfo)
   res.status(201).json({msj:'usuario creado exitósamente'})
   } catch (error) {

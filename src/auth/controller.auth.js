@@ -16,16 +16,18 @@ try {
     return res.status(400).json({msj: 'el usuario y la contraseña no coinciden'})
   }
   
-  if(usuario.email === 'adminCoder@coder.com'){
-    console.log('proximamente')
-  }
+/*   if(usuario.email === 'adminCoder@coder.com' && usuario.password === password){
+    usuario.role = 'admin'
+    await User.updateOne({email: 'adminCoder@coder.com'}, {role: 'admin'})
+  } */
 
   req.session.user ={
     firstName: usuario.firstName,
     lastName: usuario. lastName,
-    email: usuario.email
+    email: usuario.email,
+    rol: usuario.role
   }
-  console.log(req.session.user)
+  console.log('este consoloe log estoy usando' + usuario + '--------------')
 
   res.json({msj:'sesion iniciada'})
 

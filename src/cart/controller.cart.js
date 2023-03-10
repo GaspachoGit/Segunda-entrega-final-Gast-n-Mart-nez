@@ -2,7 +2,6 @@ const { Router } = require("express");
 const router = Router();
 const Cart = require("../models/cart.model");
 
-
 router.get("/", async (req, res) => {
   const carts = await Cart.find()
   res.json({ msj: carts });
@@ -13,18 +12,15 @@ router.get('/:cid', async (req,res)=>{
   try {
     const cart = await Cart.findOne({_id: cid}).populate('products.product')
 
-
     const products = cart.products.map(cartProduct => {
       const product = cartProduct.product;
       const cartItem = cart.products.find(item => item.product._id === product._id);
-
       if (cartItem) {
         return {
           ...product.toObject(),
           quantity: cartItem.quantity
         };
       }
-
       return product.toObject();
     });
 
@@ -49,7 +45,6 @@ router.post('/', async(req,res)=>{
     res.json({msg:error})
   }
 })
-
 
 router.patch('/:cartId/products/:productId', async (req, res) => {
   const { cartId, productId } = req.params;

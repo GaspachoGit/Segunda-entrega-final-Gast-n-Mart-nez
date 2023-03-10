@@ -1,8 +1,9 @@
 const { Router } = require("express");
 const router = Router();
 const Product = require("../models/products.models");
+const privateAccess = require("../utils/middlewares/privateAcces");
 
-router.get("/", async (req, res) => {
+router.get("/", privateAccess, async (req, res) => {
   const { orderBy, type, brand, size, page, perPage,  } = req.query;
   const {user} = req.session
   console.log(req.session.user)

@@ -1,4 +1,6 @@
 <h2>bienvenido {{user.firstName}}</h2>
+<h3>Rol: {{user.rol}}</h3>
+<a href="http://localhost:8080/auth/logout"><button>Cerrar sesión</button></a>
 {{#each productsMapped}}
   <div style="border: 3px black;">
     <li><h3>{{this.name}}</h3>

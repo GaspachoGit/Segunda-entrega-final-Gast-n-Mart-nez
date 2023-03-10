@@ -1,17 +1,14 @@
 const {Router} = require('express')
+const publicAccess = require('../utils/middlewares/publicAcces')
 
 const router = Router()
 
-router.get('/login', (req,res)=>{
+router.get('/login', publicAccess, (req,res)=>{
   res.render('login.handlebars')
 })
-router.get('/signup', (req,res)=>{
+router.get('/signup', publicAccess, (req,res)=>{
   res.render('signup.handlebars')
 })
-router.get('/', (req,res)=>{
-  const {user} = req.session
-  console.log(user)
-  res.render('profile.handlebars',{user})
-})
+
 
 module.exports = router
