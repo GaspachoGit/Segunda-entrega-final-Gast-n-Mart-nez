@@ -1,15 +1,13 @@
 const express = require('express')
-const mongoose = require('mongoose')
-const session = require('express-session')
-const MongoStore = require('connect-mongo')
-
-const handlebars = require('express-handlebars')
 const router = require('./router')
-
-
+const mongoose = require('mongoose')
+const MongoStore = require('connect-mongo')
+const session = require('express-session')
+const passport = require('passport')
+const initializePassport = require('./config/passport.config')
+const handlebars = require('express-handlebars')
 
 const app = express()
-
 const port = 8080
 
 mongoose.set('strictQuery', false);
@@ -29,7 +27,9 @@ app.use(session({
   resave:false,
   saveUninitialized: false
 }))
-
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");

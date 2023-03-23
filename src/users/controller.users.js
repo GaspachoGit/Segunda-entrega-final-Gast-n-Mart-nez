@@ -1,23 +1,16 @@
 const {Router} = require('express')
+const passport = require('passport')
 const User = require('../models/user.model')
+const { createHash } = require('../utils/middlewares/cryptPassword')
 
 const router = Router()
 
-router.post('/', async(req,res)=>{
+router.post('/', passport.authenticate('register', {failureRedirect: '/failRegister'}), async(req,res)=>{
   const {firstName, lastName, age, email, password} = req.body
+  
   try {
-    const newUserInfo = {
-    firstName,
-    lastName,
-    age,
-    email,
-    password,
-  }
-  if(email === 'adminCoder@coder.com'){
-    newUserInfo.role = 'admin'
-  }
-  const newUser = await User.create(newUserInfo)
-  res.status(201).json({msj:'usuario creado exitósamente'})
+    res.json({message:'usuario registrado'})
+
   } catch (error) {
     if(error.code === 11000){
       return res.status(400).json({Error: 'el usuario ya fue creado'})
@@ -26,5 +19,10 @@ router.post('/', async(req,res)=>{
   }
   
 })
+router.get('/failRegister', async (req,res)=>{
+  console.log('falló el registro')
+  res.json({msj:'falló el registro'})
+})
+
 
 module.exports = router
